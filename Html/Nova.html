@@ -579,16 +579,45 @@
             return `[Kecomu · ${version}]\n\nRecibí tu mensaje: "${mensaje}". ¿Puedes darme más contexto sobre lo que necesitas? Estoy aquí para ayudarte con desarrollo web.`;
         };
 
-        const enviarMensaje = () => {
-            const input = document.getElementById('inputMensaje');
-            const mensaje = input.value.trim();
-            if (!mensaje) return;
-            agregarMensaje(mensaje, 'usuario');
-            input.value = '';
-            setTimeout(() => {
-                agregarMensaje(obtenerRespuesta(mensaje, versionActual), 'ia');
-            }, 300);
-        };
+        const enviarMensaje = async () => {
+    const input = document.getElementById('inputMensaje');
+    const mensajeUsuario = input.value.trim();
+    if (!mensajeUsuario) return;
+
+    // 1. Mostrar mensaje del usuario en la web
+    agregarMensaje(mensajeUsuario, 'usuario');
+    input.value = '';
+
+    // 2. Definir las reglas para Ollama (el entrenamiento rápido)
+    const entrenamiento = `Eres Kecomu, experto en desarrollo web.
+    Nivel 1: Si piden colores, usa CSS inline.
+    Nivel 2: Si piden tamaños, usa px exactos.
+    Versión actual: ${versionActual}.
+    Responde de forma concisa y solo con código si es necesario.
+    Usuario: ${mensajeUsuario}
+    IA:`;
+
+    try {
+        // 3. Llamada real a tu servidor Ollama
+        const response = await fetch('http://167.114.115.187:11434/api/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                model: "llama3.2:1b",
+                prompt: entrenamiento,
+                stream: false
+            })
+        });
+
+        const data = await response.json();
+        
+        // 4. Mostrar la respuesta real de la IA
+        agregarMensaje(data.response, 'ia');
+    } catch (error) {
+        console.error("Error conectando con Ollama:", error);
+        agregarMensaje("Error: No pude conectar con mi cerebro (Ollama). Revisa la IP y CORS.", 'ia');
+    }
+};
 
         const aplicarPreferencias = () => {
             const tema = getCookie('kecomu_tema');
