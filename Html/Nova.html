@@ -584,9 +584,11 @@
     const mensajeUsuario = input.value.trim();
     if (!mensajeUsuario) return;
 
+    // 1. Mostrar mensaje del usuario en la web
     agregarMensaje(mensajeUsuario, 'usuario');
     input.value = '';
-            
+
+    // 2. Definir las reglas para Ollama (el entrenamiento rápido)
     const entrenamiento = `Eres Kecomu, experto en desarrollo web.
     Nivel 1: Si piden colores, usa CSS inline.
     Nivel 2: Si piden tamaños, usa px exactos.
@@ -596,9 +598,9 @@
     IA:`;
 
     try {
-        
+        // 3. Llamada real a tu servidor Ollama
         const response = await fetch('http://167.114.115.187:11434/api/generate', {
-        method: 'POST'
+            method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 model: "llama3.2:1b",
