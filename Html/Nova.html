@@ -598,8 +598,8 @@
     IA:`;
 
     try {
-        // 3. Llamada real a tu servidor Ollama
-        const response = await fetch('http://167.114.115.187:11434/api/generate', {
+        // 3. Llamada real a mi servidor Ollama
+        const response = await fetch('https://cors-anywhere.herokuapp.com/http://167.114.115.187:11434/api/generate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
