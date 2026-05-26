@@ -599,7 +599,7 @@
 
     try {
         // 3. Llamada real a tu servidor Ollama
-        const response = await fetch('http://167.114.115.187:11434/api/generate', {
+        const response = await fetch('https://ollama.mcortes.dev//api/generate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
